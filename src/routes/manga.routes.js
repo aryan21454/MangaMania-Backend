@@ -5,7 +5,7 @@ const router = Router();
 router.route("/addManga").post(verifyJWT, addManga);
 router.route("/deleteManga/:id").delete(verifyJWT,deleteManga);
 router.route("/updateManga/:id").put(verifyJWT,updateManga);
-router.route("/getMangaList").get(verifyJWT,getManga);
+router.route("/getMangaList").post(verifyJWT,getManga);
 
 
 

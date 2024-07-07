@@ -14,7 +14,7 @@ router.route("/logout")
 router.route("/refresh-token")
             .post(refreshAccessToken)  
 router.route("/auth-status" )
-            .get(verifyJWT,getAuthStatus)    
+            .post(verifyJWT,getAuthStatus)    
             
 
 export default router;

@@ -4,15 +4,20 @@ import dotenv from "dotenv";
 dotenv.config();
 import jwt from "jsonwebtoken";
 import { ApiError } from "../utilities/ApiError.js";
+import { ApiResponse } from "../utilities/ApiResponse.js";
 
 export const verifyJWT = asyncHandler(async (req,res,next) =>{
     try {
-        const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ","");
+        console.log(req.body);
+        const token = req.header("Authorization")?.replace("Bearer ","")|| req.body?.accessToken;
         if (!token)
             {
                 throw new ApiError("401","Invalid token");
             }
-        const decodedToken = jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
+        
+            const decodedToken = jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
+
+       
         const user = await User.findById(decodedToken._id).select("-password -refreshToken");
         if (!user) 
         {
@@ -22,6 +27,11 @@ export const verifyJWT = asyncHandler(async (req,res,next) =>{
         next();
     }
     catch(err) {
+        if (err.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: 'Token expired' });
+        } else {
+            return res.status(403).json({ message: 'Invalid token' });
+        }
         throw new ApiError(401, err?.message ||  "Unauthorized request");
     }
 })

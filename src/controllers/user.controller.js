@@ -61,16 +61,19 @@ export const loginUser = asyncHandler(async (req, res, next) => {
     }
     const {accessToken , refreshToken} = await generateAccessandRefreshToken(user._id);
     const loggedinUser = await User.findById(user._id).select("-password -refreshToken");
-    // const options = {
-    //     httpOnly : true,
-    //     secure : true ,
-    //     SameSite : 'None'
-    // }
+    const options = {
+        // httpOnly : true,
+        // secure : true
+    }
+    const obj = {
+        user : loggedinUser, 
+        accessToken:accessToken, 
+        refreshToken: refreshToken
+    }
     return res.status(200)
-    .cookie("accessToken", accessToken)
-    .cookie("refreshToken", refreshToken)
-    .json(new ApiResponse(200, "User logged in successfully", loggedinUser));
-
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(new ApiResponse(200, "User logged in successfully",obj));
 });
 export const logoutUser = asyncHandler(async(req,res,next)=>{
     await User.findByIdAndUpdate(req.user._id, {
@@ -80,15 +83,14 @@ export const logoutUser = asyncHandler(async(req,res,next)=>{
      });
   
   
-    //  const options = {
-    //     httpOnly :true,
-    //     secure : true, 
-    //     SameSite : 'None'
-    //    }
+     const options = {
+        // httpOnly :true,
+        // secure : true
+       }
   
      return res.status(200).
-     clearCookie("accessToken").
-     clearCookie("refreshToken").
+     clearCookie("accessToken",options).
+     clearCookie("refreshToken",options).
      json(new ApiResponse(200,"User logged out successfully"));
      
   
@@ -114,15 +116,14 @@ export const logoutUser = asyncHandler(async(req,res,next)=>{
              throw new ApiError(401, "invalid refresh token");
           }
        const {accessToken , newrefreshToken} =  await generateAccessandRefreshToken(user._id);
-    //    const options = {
-    //       httpOnly :true,
-    //       secure : true ,
-    //       SameSite : 'None'
-    //      }
+       const options = {
+        //   httpOnly :true,
+        //   secure : true
+         }
        
        return res.status(200)
-       .cookie("accessToken",accessToken)
-       .cookie("refreshToken",newrefreshToken)
+       .cookie("accessToken",accessToken,options)
+       .cookie("refreshToken",newrefreshToken,options)
        .json(new ApiResponse(200,"user login successfully",{
           accessToken,
           newrefreshToken : refreshToken
@@ -142,4 +143,6 @@ export const logoutUser = asyncHandler(async(req,res,next)=>{
     catch(err) {
         throw new ApiError(401, err?.message ||  "Unauthorized request");
     }
+
+
  });

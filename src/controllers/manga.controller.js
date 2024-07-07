@@ -63,11 +63,11 @@ export const deleteManga = asyncHandler(async(req,res,next)=>{
     }
 
 });
-
 export const getManga = asyncHandler(async(req,res,next)=>{
     try {
         const id = req.user._id;
-        const list = await Manga.find({user: id}); 
+        const list = await Manga.find({user: id});
+        console.log(list); 
         if (list.length === 0)
         {
             res.status(200).json(new ApiResponse(200,"No manga found",[]));

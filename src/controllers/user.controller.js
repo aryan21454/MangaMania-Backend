@@ -62,8 +62,9 @@ export const loginUser = asyncHandler(async (req, res, next) => {
     const {accessToken , refreshToken} = await generateAccessandRefreshToken(user._id);
     const loggedinUser = await User.findById(user._id).select("-password -refreshToken");
     const options = {
-        // httpOnly : true,
-        // secure : true
+        httpOnly : true,
+        secure : true, 
+        SameSite : "None",
     }
     return res.status(200)
     .cookie("accessToken", accessToken, options)
@@ -80,9 +81,10 @@ export const logoutUser = asyncHandler(async(req,res,next)=>{
   
   
      const options = {
-        // httpOnly :true,
-        // secure : true
-       }
+        httpOnly : true,
+        secure : true, 
+        SameSite : "None",
+    }
   
      return res.status(200).
      clearCookie("accessToken",options).
@@ -113,9 +115,10 @@ export const logoutUser = asyncHandler(async(req,res,next)=>{
           }
        const {accessToken , newrefreshToken} =  await generateAccessandRefreshToken(user._id);
        const options = {
-        //   httpOnly :true,
-        //   secure : true
-         }
+        httpOnly : true,
+        secure : true, 
+        SameSite : "None",
+    }
        
        return res.status(200)
        .cookie("accessToken",accessToken,options)

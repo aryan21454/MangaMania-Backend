@@ -44,8 +44,7 @@ export const updateManga = asyncHandler(async(req,res,next)=>{
     //  console.log(manga);
      res.status(201).json(new ApiResponse(201,"Manga updated successfully",manga));
    } catch (error) {
-    console.log(error)
-    
+    console.log(error);
    }
 });
 export const deleteManga = asyncHandler(async(req,res,next)=>{

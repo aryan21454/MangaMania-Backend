@@ -24,7 +24,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     if ([email, username, password].some((field) => field?.trim() ==="")) {
         throw new ApiError(400, "Missing required fields")
     }
-    const   existedUser = await User.findOne({
+    const existedUser = await User.findOne({
         $or : [{email},{username}]
     });
     if (existedUser) {
@@ -80,22 +80,18 @@ export const logoutUser = asyncHandler(async(req,res,next)=>{
      },{
         new : true
      });
-  
-  
+
      const options = {
         httpOnly: true,
         secure: true, 
         sameSite: "None",
         maxAge: 7 * 24 * 60 * 60 * 1000  // 7 days in milliseconds
     };
-    
-  
      return res.status(200).
      clearCookie("accessToken",options).
      clearCookie("refreshToken",options).
      json(new ApiResponse(200,"User logged out successfully"));
-     
-  
+
   });
   export const refreshAccessToken = asyncHandler(async(req,res,next)=>{
 
